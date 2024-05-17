@@ -89,7 +89,6 @@ export function renderOrderSummary() {
           : `$${deliveryOption.priceCents / 100} - `;
 
       const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
-      console.log(isChecked);
 
       html += `
       <div class="delivery-option js-delivery-option"

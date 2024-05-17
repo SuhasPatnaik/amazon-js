@@ -6,26 +6,22 @@ import { getDeliveryOption } from "../../data/deliveryOptions.js";
 export function renderPaymentSummary() {
   let totalProductsCost = 0;
   let totalShippingCost = 0;
+
   cart.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
-
     totalProductsCost += (cartItem.quantity * product.priceCents) / 100;
 
-    console.log(totalProductsCost);
-
-    let deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
-
+    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
     totalShippingCost += deliveryOption.priceCents / 100;
+  });
 
-    console.log(totalShippingCost);
+  const totalBeforeTax = totalProductsCost + totalShippingCost;
 
-    let totalBeforeTax = totalProductsCost + totalShippingCost;
+  const estimatedTax = 0.1 * totalBeforeTax;
 
-    let estimatedTax = 0.1 * totalBeforeTax;
+  const orderTotal = totalBeforeTax + estimatedTax;
 
-    let orderTotal = totalBeforeTax + estimatedTax;
-
-    let html = `
+  const html = `
     <div class="payment-summary-title">Order Summary</div>
     <div class="payment-summary-row">
       <div>Items (${calculateCartQuantity()}):</div>
@@ -57,7 +53,6 @@ export function renderPaymentSummary() {
     </button>
   `;
 
-    const paymentSummaryHTML = document.querySelector(".js-payment-summary");
-    paymentSummaryHTML.innerHTML = html;
-  });
+  const paymentSummaryHTML = document.querySelector(".js-payment-summary");
+  paymentSummaryHTML.innerHTML = html;
 }

@@ -5,7 +5,7 @@ export function getDeliveryOption(deliveryOptionId) {
       deliveryOption = currentDeliveryOption;
     }
   });
-  return deliveryOption;
+  return deliveryOption || deliveryOptions[0];
 }
 
 export const deliveryOptions = [
