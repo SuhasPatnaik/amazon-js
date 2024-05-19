@@ -1,92 +1,103 @@
-const cart = {
-  cartItems: undefined,
+function Cart() {
+  const cart = {
+    cartItems: undefined,
 
-  loadFromStorage() {
-    this.cartItems = JSON.parse(localStorage.getItem("cart-oop"));
+    loadFromStorage(cartType) {
+      this.cartItems = JSON.parse(localStorage.getItem(cartType));
 
-    if (!this.cartItems) {
-      this.cartItems = [
-        {
-          productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-          quantity: 2,
-          deliveryOptionId: "1",
-        },
-        {
-          productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-          quantity: 1,
-          deliveryOptionId: "2",
-        },
-      ];
-    }
-  },
-
-  saveToStorage() {
-    localStorage.setItem("cart-oop", JSON.stringify(this.cartItems));
-  },
-
-  addToCart(productId) {
-    let matchingItem;
-
-    this.cartItems.forEach((cartItem) => {
-      if (cartItem.productId === productId) {
-        matchingItem = cartItem;
+      if (!this.cartItems) {
+        this.cartItems = [
+          {
+            productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+            quantity: 2,
+            deliveryOptionId: "1",
+          },
+          {
+            productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+            quantity: 1,
+            deliveryOptionId: "2",
+          },
+        ];
       }
-    });
+    },
 
-    const dropdownQuantity = document.querySelector(
-      `.js-quantity-selector-${productId}`
-    );
+    saveToStorage(cartType) {
+      localStorage.setItem(cartType, JSON.stringify(this.cartItems));
+    },
 
-    let dropdownQuantityValue = Number(dropdownQuantity.value);
+    addToCart(productId) {
+      let matchingItem;
 
-    if (matchingItem) {
-      matchingItem.quantity += dropdownQuantityValue;
-    } else {
-      this.cartItems.push({
-        productId: productId,
-        quantity: dropdownQuantityValue,
-        deliveryOptionId: "1",
+      this.cartItems.forEach((cartItem) => {
+        if (cartItem.productId === productId) {
+          matchingItem = cartItem;
+        }
       });
-    }
 
-    this.saveToStorage();
-  },
+      const dropdownQuantity = document.querySelector(
+        `.js-quantity-selector-${productId}`
+      );
 
-  removeFromCart(productId) {
-    const updatedCart = [];
+      // let dropdownQuantityValue = Number(dropdownQuantity.value);
 
-    this.cartItems.forEach((cartItem) => {
-      if (cartItem.productId !== productId) {
-        updatedCart.push(cartItem);
+      if (matchingItem) {
+        matchingItem.quantity += 1;
+      } else {
+        this.cartItems.push({
+          productId: productId,
+          quantity: 1,
+          deliveryOptionId: "1",
+        });
       }
-    });
 
-    this.cartItems = updatedCart;
+      this.saveToStorage();
+    },
 
-    this.saveToStorage();
-  },
+    removeFromCart(productId) {
+      const updatedCart = [];
 
-  calculateCartQuantity() {
-    let cartQuantity = 0;
-    this.cartItems.forEach((cartItem) => {
-      cartQuantity += cartItem.quantity;
-    });
+      this.cartItems.forEach((cartItem) => {
+        if (cartItem.productId !== productId) {
+          updatedCart.push(cartItem);
+        }
+      });
 
-    return cartQuantity;
-  },
+      this.cartItems = updatedCart;
 
-  updateDeliveryOption(productId, deliveryOptionId) {
-    let matchingItem;
+      this.saveToStorage();
+    },
 
-    this.cartItems.forEach((cartItem) => {
-      if (cartItem.productId === productId) {
-        matchingItem = cartItem;
-      }
-    });
+    calculateCartQuantity() {
+      let cartQuantity = 0;
+      this.cartItems.forEach((cartItem) => {
+        cartQuantity += cartItem.quantity;
+      });
 
-    matchingItem.deliveryOptionId = deliveryOptionId;
-    this.saveToStorage();
-  },
-};
+      return cartQuantity;
+    },
 
-cart.loadFromStorage();
+    updateDeliveryOption(productId, deliveryOptionId) {
+      let matchingItem;
+
+      this.cartItems.forEach((cartItem) => {
+        if (cartItem.productId === productId) {
+          matchingItem = cartItem;
+        }
+      });
+
+      matchingItem.deliveryOptionId = deliveryOptionId;
+      this.saveToStorage();
+    },
+  };
+
+  return cart;
+}
+
+const cart = Cart();
+const businessCart = Cart();
+
+cart.loadFromStorage("cart-oop");
+businessCart.loadFromStorage("cart-business");
+
+console.log(cart);
+console.log(businessCart);
